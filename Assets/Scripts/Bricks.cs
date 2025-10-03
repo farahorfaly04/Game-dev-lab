@@ -42,20 +42,22 @@ public class Brick : MonoBehaviour
         if (used) return;
         used = true;
 
-  
         if (hitSfx && audioSrc) audioSrc.PlayOneShot(hitSfx);
 
         if (usedBrickSprite) sr.sprite = usedBrickSprite;
 
         if (headHitTrigger) headHitTrigger.enabled = false;
 
-
         StartCoroutine(BounceRoutine());
 
         // 50/50 coin spawn if allowed
-        if (canSpawnCoin && Random.value < 0.5f)
+        if (canSpawnCoin)
         {
-            StartCoroutine(SpawnCoinRoutine());
+            float roll = Random.value; // value between 0 and 1
+            if (roll < 0.5f)
+            {
+                StartCoroutine(SpawnCoinRoutine());
+            }
         }
     }
 
