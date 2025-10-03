@@ -303,6 +303,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4693493771527435042}
   - component: {fileID: 4901447551089264000}
+  - component: {fileID: 8007115828724013159}
   m_Layer: 8
   m_Name: HeadHitTrigger
   m_TagString: Untagged
@@ -371,3 +372,15 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1.1140263}
   m_EdgeRadius: 0
+--- !u!114 &8007115828724013159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8137872622719995621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb70991459568c4ea32b3a8802567ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeadHitTrigger
