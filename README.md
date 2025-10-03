@@ -1,5 +1,4 @@
-# Scene week2_cloud has the bouncy cloud implemented as well. 
-Scene week2_all has everything except the cloud (backup version).
+# Scene week2coins is the latest version with the coins implemented.
 
 Videos of us playing at: https://loom.com/share/folder/d9ffbea181984cdcae43e8cbd2bbf426  
-Backup link: https://www.loom.com/share/bda2e881f67545a59cd44504d0b59c44
+Backup link: https://www.loom.com/share/ace93151417d4554bdf5c85bc8aa06a3?sid=e2326dd3-49ab-4936-b738-a633571e69e8
