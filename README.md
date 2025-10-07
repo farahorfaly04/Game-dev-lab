@@ -10,7 +10,7 @@ We have implemented everything required in the checklist:
         The box sprite is changed to indicate that it's disabled once coin is spawned
         The question box, once disabled, should not bounce anymore
 
-        * Important: we tested on applied all the changes to the question mark block we unpacked during the lab, we left the others plain for now, though the process would've been more or less the same.
+        Important: we tested and applied all the changes to the question mark block we unpacked during the lab, we left the others plain for now, though the process would've been more or less the same.
 
 Coins shooting from the bricks:
 - We added a 50/50% chance of coins spawning from bricks when Mario hits them with his head from below:
