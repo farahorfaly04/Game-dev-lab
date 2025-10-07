@@ -16,6 +16,16 @@ public class PlayerMovement : MonoBehaviour
     public GameObject enemies;
     public JumpOverGoomba jumpOverGoomba;
     public Animator marioAnimator;
+    public Transform gameCamera;
+
+
+    public AudioClip marioDeath;
+    public float deathImpulse = 15;
+
+    // state
+    [System.NonSerialized]
+    public bool alive = true;
+    int collisionLayerMask = (1 << 6) | (1 << 7) | (1 << 8);
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +66,8 @@ public class PlayerMovement : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Ground") && !onGroundState)
+
+        if (((collisionLayerMask & (1 << col.transform.gameObject.layer)) > 0) & !onGroundState)
         {
             onGroundState = true;
             // update animator state
@@ -67,41 +78,60 @@ public class PlayerMovement : MonoBehaviour
     // FixedUpdate is called 50 times a second
     void FixedUpdate()
     {
-        float moveHorizontal = Input.GetAxisRaw("Horizontal");
-
-        if (Mathf.Abs(moveHorizontal) > 0)
+        if (alive)
         {
-            Vector2 movement = new Vector2(moveHorizontal, 0);
-            // check if it doesn't go beyond maxSpeed
-            if (marioBody.linearVelocity.magnitude < maxSpeed)
-                marioBody.AddForce(movement * speed);
-        }
+            float moveHorizontal = Input.GetAxisRaw("Horizontal");
 
-        // stop
-        if (Input.GetKeyUp("a") || Input.GetKeyUp("d"))
-        {
-            // stop
-            marioBody.linearVelocity = Vector2.zero;
-        }
+            if (Mathf.Abs(moveHorizontal) > 0f)
+            {
+                Vector2 movement = new Vector2(moveHorizontal, 0);
+                if (marioBody.linearVelocity.magnitude < maxSpeed)
+                    marioBody.AddForce(movement * speed);
+            }
 
-        if (Input.GetKeyDown("space") && onGroundState)
-        {
-            marioBody.AddForce(Vector2.up * upSpeed, ForceMode2D.Impulse);
-            onGroundState = false;
-            // update animator state
-            marioAnimator.SetBool("onGround", onGroundState);
+            if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+            {
+                marioBody.linearVelocity = Vector2.zero;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space) && onGroundState)
+            {
+                marioBody.AddForce(Vector2.up * upSpeed, ForceMode2D.Impulse);
+                onGroundState = false;
+                marioAnimator.SetBool("onGround", onGroundState);
+            }
         }
     }
+
+
+    void PlayDeathImpulse()
+    {
+        marioBody.AddForce(Vector2.up * deathImpulse, ForceMode2D.Impulse);
+    }
+
+    void GameOverScene()
+    {
+        if (jumpOverGoomba != null && jumpOverGoomba.gameOverPanel != null)
+            jumpOverGoomba.gameOverPanel.SetActive(true);
+
+        // pause the game
+        Time.timeScale = 0.0f;
+    }
+
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Enemy") && alive)
         {
             Debug.Log("Collided with goomba!");
-            Time.timeScale = 0.0f; // Pause the game
-            jumpOverGoomba.gameOverPanel.SetActive(true);
+
+            // play death animation
+            marioAnimator.Play("mario-die");
+            marioAudio.PlayOneShot(marioDeath);
+            alive = false;
         }
     }
+
 
     public void RestartButtonCallback(int input)
     {
@@ -110,6 +140,15 @@ public class PlayerMovement : MonoBehaviour
         ResetGame();
         // resume time
         Time.timeScale = 1.0f;
+    }
+
+    // for audio, we should move this later higher in the script in week 3 for cleanlinesss
+    public AudioSource marioAudio;
+
+    void PlayJumpSound()
+    {
+        // play jump sound
+        marioAudio.PlayOneShot(marioAudio.clip);
     }
 
     private void ResetGame()
@@ -131,6 +170,10 @@ public class PlayerMovement : MonoBehaviour
         // reset score
         jumpOverGoomba.score = 0;
         jumpOverGoomba.gameOverPanel.SetActive(false);
+
+        // reset animation
+        marioAnimator.SetTrigger("gameRestart");
+        alive = true;
     }
 
 }
